@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -11,8 +12,21 @@ import android.widget.ListView;
 import java.util.Arrays;
 
 public class WorkoutListFragment extends ListFragment {
+
+    private Listener listener;
+
+    interface Listener {
+            void itemClicked(long id);
+    };
+
     public WorkoutListFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.listener = (Listener)context;
     }
 
     @Override
@@ -41,7 +55,12 @@ public class WorkoutListFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-
+    public void onListItemClick(ListView listView,
+                                View itemView,
+                                int position,
+                                long id) {
+        if (listener != null) {
+            listener.itemClicked(id);
+        }
     }
 }
