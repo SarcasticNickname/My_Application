@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,8 +18,24 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void itemClicked(long id) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(DetailActivity.EXTRA_WORKOUT_ID, id);
-        startActivity(intent);
+
+        View control_view = findViewById(R.id.fragment_container);
+        if (control_view != null) {
+            // Start transaction
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            // Configuring transaction
+            WorkoutDetailFragment detailFragment = new WorkoutDetailFragment();
+            detailFragment.setWorkoutId(id);
+            transaction.replace(R.id.fragment_container, detailFragment);
+            //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            transaction.addToBackStack(null);
+            // Committing
+            transaction.commit();
+
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra(DetailActivity.EXTRA_WORKOUT_ID, id);
+            startActivity(intent);
+        }
     }
 }
